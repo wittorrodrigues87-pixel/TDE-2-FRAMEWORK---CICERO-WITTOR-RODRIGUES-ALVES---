@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amazon.com.br</title>
+<link rel="stylesheet" href="style.css">
+<script src="vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div v-if="pagina=='login'" class="pagina-login">
+      <a href="#/" class="logotipo escuro">amazon<small>.com.br</small><i></i></a>
+      <form class="caixa-login" @submit.prevent="entrar">
+        <h1>Faça login ou crie uma conta</h1>
+        <label>Digite um número de celular ou e-mail</label>
+        <input v-model="email">
+        <p class="mensagem-erro" v-if="erro">{{ erro }}</p>
+        <button class="botao-amarelo">Continuar</button>
+        <p class="texto-termos">Ao continuar, você concorda com as <a href="#">Condições de Uso</a> e a <a href="#">Notificação de privacidade</a> da Amazon.</p>
+        <a href="#" class="texto-link">Precisa de ajuda?</a>
+      </form>
+      <div class="rodape-login">
+        <p><a href="#">Condições de uso</a><a href="#">Notificação de privacidade</a><a href="#">Ajuda</a><a href="#">Aviso de cookies</a><a href="#">Anúncios baseados em interesses</a></p>
+        <small>© 1996-2026, Amazon.com, Inc. ou suas afiliadas</small>
+      </div>
+    </div>
+
+    <template v-else>
+      <div class="fundo-escuro" v-if="menu" @click="menu=false"></div>
+      <aside class="menu-lateral" :class="{aberto:menu}">
+        <div class="topo-menu-lateral">👤 Olá, faça seu login</div>
+        <button class="botao-fechar" @click="menu=false">✕</button>
+        <div class="conteudo-menu-lateral">
+          <div v-for="s in secoes" class="secao-menu-lateral">
+            <h3>{{ s.titulo }}</h3>
+            <a v-for="i in s.itens" href="#">{{ i }} <span v-if="s.seta">›</span></a>
+          </div>
+        </div>
+      </aside>
+
+      <header>
+        <a href="#/" class="logotipo">amazon<small>.com.br</small><i></i></a>
+        <div class="local-entrega"><small>A entrega será feita em Bela Vista 01319900</small><b>📍 Atualizar CEP</b></div>
+        <form class="campo-busca" @submit.prevent>
+          <span class="categoria-busca">Todos ▾</span><input placeholder="Pesquisar Amazon.com.br"><button>🔍</button>
+        </form>
+        <a href="#/login" class="item-cabecalho"><small>Olá, faça seu login</small><b>Contas e Listas ▾</b></a>
+        <a href="#" class="item-cabecalho"><small>Devoluções</small><b>e Pedidos</b></a>
+        <a href="#" class="carrinho-cabecalho"><em>{{ carrinho }}</em> 🛒 <b>Carrinho</b></a>
+      </header>
+      <nav>
+        <a href="#" @click.prevent="menu=true"><b>☰ Todos</b></a>
+        <a v-for="n in nav" :href="n=='Games'?'#/produto':'#'">{{ n }}</a>
+        <b class="destaque-menu">Jovem Sherlock - Assista agora</b>
+      </nav>
+
+      <main v-if="pagina=='home'">
+  <section class="banner-inicial" :style="{backgroundImage:'url(img/hero'+(slide+1)+'.jpg)'}" @click="location.hash='#/produto'">
+    <button @click.stop="slide=(slide+1)%2">‹</button><button @click.stop="slide=(slide+1)%2">›</button>
+  </section>
+
+  <div class="grade-cartoes">
+    <div class="cartao"><h2>Ofertas para aproveitar a Páscoa</h2>
+      <div class="grade-dupla"><div v-for="p in ofertas1"><img :src="'img/'+p.img+'.jpg'"><span class="porcentagem-desconto">{{ p.off }}% off</span> <span class="texto-oferta">Oferta</span></div></div>
+      <a href="#" class="link-mais">Ver mais</a></div>
+    <div class="cartao"><h2>Ofertas melhores avaliadas</h2>
+      <div class="grade-dupla"><a v-for="p in ofertas2" :href="p.img=='controle'?'#/produto':'#'"><img :src="'img/'+p.img+'.jpg'"><span class="porcentagem-desconto">{{ p.off }}% off</span> <span class="texto-oferta">{{ p.txt }}</span></a></div>
+      <a href="#" class="link-mais">Ver mais</a></div>
+    <div class="cartao"><h2>Eleve sua rotina de beleza</h2>
+      <div class="grade-dupla"><div v-for="p in beleza"><img :src="'img/'+p.img+'.jpg'"><p>{{ p.nome }}</p></div></div>
+      <a href="#" class="link-mais">Veja mais</a></div>
+    <div class="coluna-lateral">
+      <div class="cartao"><h2>Acesse uma conta para ter a melhor experiência</h2><a href="#/login" class="botao-amarelo">Fazer login de forma segura</a></div>
+      <div class="anuncio"><img src="img/patro.jpg"><small>Patrocinado</small></div>
+    </div>
+  </div>
+
+  <div class="grade-cartoes">
+    <div class="cartao"><h2>Especial de Páscoa</h2><img src="img/bunny.jpg" class="imagem-destaque"><a href="#" class="link-mais">Ver mais</a></div>
+    <div class="cartao"><h2>Conheça o Kindle 11ª Geração</h2><img src="img/kindle.jpg" class="imagem-destaque"><a href="#" class="link-mais">Confira tudo sobre o Kindle</a></div>
+    <div class="cartao"><h2>Até 5% da fatura de volta em pontos</h2><img src="img/cartao.jpg" class="imagem-destaque"><a href="#" class="link-mais">Peça seu cartão sem anuidade</a></div>
+    <div class="cartao"><h2>Confira Echo e Fire TV com Alexa</h2>
+      <div class="grade-dupla"><div v-for="d in echo"><div class="imagem-dispositivo" :style="{background:d.cor}"><img v-if="d.img" :src="'img/'+d.img+'.jpg'"></div><p>{{ d.nome }}</p></div></div>
+      <a href="#" class="link-mais">Ver mais em Dispositivos Amazon</a></div>
+  </div>
+
+  <section class="faixa-produtos">
+    <h2>Especial de Páscoa</h2>
+    <div class="lista-horizontal" ref="c1"><div v-for="i in 7" class="item-redondo"><img :src="'img/c'+i+'.jpg'"></div></div>
+    <button class="seta-lista esquerda" @click="rolar('c1',-1)">‹</button><button class="seta-lista direita" @click="rolar('c1',1)">›</button>
+  </section>
+
+  <section class="faixa-turquesa">
+    <h2>Páscoa em Cozinha <a href="#">Veja mais produtos</a></h2>
+    <div class="lista-horizontal" ref="c2">
+      <div v-for="p in cozinha" class="cartao-produto"><img :src="'img/'+p.img+'.jpg'">
+        <p>{{ p.nome }}</p><p class="nota-avaliacao">{{ p.nota }} <span class="estrelas">{{ estrelas(p.nota) }}</span> {{ p.aval }}</p>
+        <p class="preco-produto"><small>R$</small>{{ p.preco }} <s v-if="p.de">R$ {{ p.de }}</s></p><p class="texto-entrega">Entrega GRÁTIS: <b>sex., 20 de mar.</b></p></div>
+    </div>
+    <button class="seta-lista direita" @click="rolar('c2',1)">›</button>
+  </section>
+
+  <section class="faixa-produtos">
+    <h2>Mais amados por categoria</h2>
+    <div class="lista-horizontal" ref="c3"><div v-for="c in categorias" class="categoria-produto"><img :src="'img/'+c.img+'.jpg'"><p>{{ c.nome }}</p></div></div>
+    <button class="seta-lista direita" @click="rolar('c3',1)">›</button>
+  </section>
+
+  <section class="recomendacao"><h2>Veja recomendações personalizadas</h2><a href="#/login" class="botao-amarelo">Faça seu login</a><p>Cliente novo? <a href="#/login">Comece aqui.</a></p></section>
+</main>
+
+<main v-if="pagina=='produto'" class="pagina-produto">
+  <div class="menu-produto"><b>Games e Consoles</b><a v-for="n in subnav" href="#">{{ n }}</a></div>
+  <p class="caminho-produto">Games e Consoles › Nintendo Switch 2 › Consoles</p>
+  <div class="area-produto">
+    <div class="miniaturas-produto"><img v-for="(t,i) in thumbs" :src="'img/'+t+'.jpg'" :class="{selecionado:foto==i}" @click="foto=i"><span>3+</span></div>
+    <div class="imagem-principal"><img :src="'img/f'+(foto+1)+'.jpg'"></div>
+    <div class="informacoes-produto">
+      <h1>Bundle Nintendo Switch 2 + Jogo Digital Mario Kart World – Modelo Nacional de Tomada</h1>
+      <a href="#" class="texto-link">Visite a loja Nintendo</a>
+      <p><b>Plataforma :</b> Nintendo Switch</p>
+      <p class="nota-avaliacao">4,8 <span class="estrelas">★★★★★</span> ⌄ <a href="#" class="texto-link">(2.076)</a></p>
+      <span class="selo-produto">Escolha da Amazon</span>
+      <p class="texto-pequeno"><b>Mais de 500 compras</b> no mês passado</p><hr>
+      <p class="preco-grande"><span class="desconto">-6%</span> <small>R$</small>4.499<sup>00</sup></p>
+      <p class="texto-pequeno">De: <s>R$4.799,90</s></p><p class="selo-prime">✓prime</p>
+      <div class="icones-produto"><div v-for="i in icones"><img :src="'img/'+i.img+'.jpg'"><a href="#">{{ i.txt }}</a></div></div><hr>
+      <p>Outros preços estão disponíveis em <a href="#" class="texto-link"><u>mais opções de compra</u></a>, com ofertas que podem não ser elegíveis para o Amazon Prime.</p>
+      <p>Edition: <b>{{ edicoes[edicao] }}</b></p>
+      <div class="opcoes-versao"><button v-for="(e,i) in edicoes" :class="{selecionado:edicao==i}" @click="edicao=i">{{ e }}</button></div>
+      <p><b>Em até 12x R$ 374,99 sem juros</b> <a href="#" class="texto-link">Ver opções de pagamento ⌄</a></p>
+      <p><a href="#" class="texto-link"><b>Você pode parcelar em até 24x sem cartão de crédito com a Geru!</b></a></p>
+    </div>
+    <div class="caixa-compra">
+      <p class="preco-compra"><small>R$</small>4.499<sup>00</sup></p><p class="selo-prime">✓prime</p>
+      <p>Entrega GRÁTIS: <b>Quinta-feira, 19 de Março.</b> <span class="texto-laranja">Se pedir dentro de 29 mins</span></p>
+      <p class="texto-link texto-pequeno">📍 Enviar para José - Juazeiro Do N... 63038345</p>
+      <p class="texto-estoque">Em estoque</p>
+      <select v-model="qtd"><option v-for="n in 5" :value="n">Quantidade: {{ n }}</option></select>
+      <button class="botao-amarelo" @click="carrinho+=qtd">Adicionar ao carrinho</button>
+      <button class="botao-amarelo botao-laranja" @click="carrinho+=qtd">Comprar agora</button>
+      <table><tr><td>Enviado / Vendido / Devolução</td><td>Amazon.com.br<br><a href="#" class="texto-link">Elegível para Devolução, Reembolso em...</a></td></tr><tr><td>Pagamento</td><td><a href="#" class="texto-link">Transação segura</a></td></tr></table>
+      <a href="#" class="texto-link texto-pequeno">⌄ Ver mais</a>
+      <p><b>Adicionar plano de seguro ou garantia:</b></p>
+      <label v-for="g in garantias"><input type="checkbox"> <a href="#" class="texto-link">{{ g.nome }}</a> por <b>R$ {{ g.preco }}</b></label>
+    </div>
+  </div>
+
+  <img src="img/ban1.jpg" class="banner-produto"><img src="img/ban2.jpg" class="banner-produto">
+
+  <section class="faixa-relacionados">
+    <div class="titulo-secao"><h2>Produtos relacionados comprados pelos clientes</h2><span>Página 1 de 11 ⋮</span></div>
+    <div class="lista-horizontal" ref="c4"><div v-for="r in relacionados" class="item-relacionado">
+      <img v-if="r.img" :src="'img/'+r.img+'.jpg'"><div v-else class="imagem-sem-foto">{{ r.nome.split(' ')[0] }}</div>
+      <a href="#" class="texto-link">{{ r.nome }}</a><p class="texto-pequeno" v-if="r.marca">{{ r.marca }}</p>
+      <p class="nota-avaliacao"><span class="estrelas">★★★★★</span> <a href="#" class="texto-link">{{ r.aval }}</a></p>
+      <p class="preco-produto"><span class="desconto" v-if="r.desc">-{{ r.desc }}%</span> <small>R$</small>{{ r.preco }}</p><p class="selo-prime">✓prime <span>Entrega GRATUITA</span></p></div></div>
+    <button class="seta-lista esquerda" @click="rolar('c4',-1)">‹</button><button class="seta-lista direita" @click="rolar('c4',1)">›</button>
+  </section>
+
+  <section class="secao-detalhes"><h2>Detalhes do produto</h2>
+    <p v-for="d in detalhes"><b>{{ d[0] }} :</b> {{ d[1] }}</p>
+    <p><b>Avaliações dos clientes:</b> 4,8 <span class="estrelas">★★★★★</span> <a href="#" class="texto-link">(2.076)</a></p>
+  </section>
+  <section class="secao-detalhes"><h2>Descrição do produto</h2>
+    <p class="texto-descricao">O Nintendo Switch 2 representa a próxima evolução dos consoles, oferecendo uma experiência de jogo imersiva com gráficos aprimorados e funcionalidades inovadoras. Com resolução de até 4K na TV e suporte a HDR, os jogos ganham vida. Os novos controles Joy-Con 2 com conectores magnéticos e modo mouse expandem suas opções de interação. Conecte-se com amigos através do GameChat, compartilhando tela e fazendo chamadas de vídeo. A tela maior e os três modos de jogo proporcionam flexibilidade para jogar onde e como quiser, garantindo diversão ininterrupta. Prepare-se para a evolução da série Mario Kart em Mario Kart World para Nintendo Switch 2! O mundo inteiro é sua pista de corrida nesta experiência de mundo aberto, onde você pode correr livremente por paisagens deslumbrantes, enfrentando até 24 pilotos em emocionantes modos de jogo como Grande Prêmio e Eliminatória.</p>
+  </section>
+
+  <section class="area-avaliacoes">
+    <div class="resumo-avaliacoes">
+      <h2>Avaliações de clientes</h2>
+      <p class="nota-avaliacao nota-grande"><span class="estrelas">★★★★★</span> 4,8 de 5</p><p class="texto-pequeno">2.076 avaliações globais</p>
+      <div class="barra-avaliacao" v-for="b in barras"><a href="#" :class="b[1]?'texto-link':''">{{ b[0] }} {{ b[0]==1?'estrela':'estrelas' }}</a><div><i :style="{width:b[1]+'%'}"></i></div><a href="#" :class="b[1]?'texto-link':''">{{ b[1] }}%</a></div>
+      <hr><h3>Avalie este produto</h3><p>Compartilhe seus pensamentos com outros clientes</p>
+      <button class="botao-contorno">Escreva uma avaliação</button><hr><img src="img/lite.jpg" class="imagem-lite">
+    </div>
+    <div class="lista-avaliacoes">
+      <div class="titulo-secao"><h2>Avaliações com imagens</h2><a href="#" class="texto-link">Ver todas as fotos ›</a></div>
+      <div class="fotos-clientes"><img v-for="i in 6" :src="'img/r'+i+'.jpg'"></div><hr>
+      <h2>Principais avaliações do Brasil</h2>
+      <div class="avaliacao-cliente" v-for="r in reviews">
+        <p class="autor-avaliacao"><span class="avatar-cliente">👤</span>{{ r.user }}</p>
+        <p><span class="estrelas">★★★★★</span> <b>{{ r.titulo }}</b></p>
+        <p class="texto-cinza">Avaliado no Brasil em {{ r.data }}</p>
+        <p class="texto-cinza">Edition: Standard <span class="compra-verificada">| Compra verificada</span></p>
+        <p>{{ r.texto }}</p><img v-if="r.img" :src="'img/'+r.img+'.jpg'" class="foto-avaliacao">
+        <p class="texto-cinza">{{ r.util }} pessoas acharam isso útil</p>
+        <button class="botao-contorno texto-pequeno" @click="r.util++">Útil</button> <span class="texto-cinza">| Denunciar</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <section class="recomendacao" v-if="pagina=='produto'"><h2>Veja recomendações personalizadas</h2><a href="#/login" class="botao-amarelo">Faça seu login</a><p>Cliente novo? <a href="#/login">Comece aqui.</a></p></section>
+  <a href="#" class="voltar-topo" @click.prevent="subir">Voltar ao início</a>
+  <div class="colunas-rodape"><div v-for="c in rodape"><h3>{{ c.titulo }}</h3><a v-for="l in c.itens" href="#">{{ l }}</a></div></div>
+  <div class="base-rodape"><a href="#/" class="logotipo branco">amazon<i></i></a><span class="seletor-pais">🇧🇷 Brasil</span></div>
+</footer>
+</template>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
